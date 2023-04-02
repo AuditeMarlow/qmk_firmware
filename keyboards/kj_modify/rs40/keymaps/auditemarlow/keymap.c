@@ -40,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------------------------------------------------------------------------------------------|
  * | `       | \     | -     | =     | [     | ]     | Left  | Down  | Up    | Right | '           |
  * |-----------------------------------------------------------------------------------------------|
- * |             |       |       |       |       |       |       |       | <     | >     | ?       |
+ * |             |       |       |       |       |       | Home  | End   | <     | >     | ?       |
  * |-----------------------------------------------------------------------------------------------|
  * |         |       |         |                 |                    |          |       | Bloader |
  * '-----------------------------------------------------------------------------------------------'
@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_LOWER] = LAYOUT(
 	_______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
 	KC_GRV,  KC_BSLS, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,          KC_QUOT,
-	_______,          _______, _______, _______, _______, _______, _______, _______, KC_LT,   KC_GT,   KC_QUES,
+	_______,          _______, _______, _______, _______, _______, KC_HOME, KC_END,  KC_LT,   KC_GT,   KC_QUES,
 	_______, _______, _______,          _______,                   _______,          _______, _______, QK_BOOT
 ),
 
@@ -78,23 +78,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------------------------------------------------------------------------------------------|
  * |             | 1     | 2     | 3     | 4     | 5     | F9    | F10   | F11   | F12   |         |
  * |-----------------------------------------------------------------------------------------------|
- * |         | Alt   | C       | Space           |                    |          |       |         |
+ * |         | Alt   | C       | Space           | B                  |          |       |         |
  * '-----------------------------------------------------------------------------------------------'
  */
 [_GAME] = LAYOUT(
 	_______, _______, _______, _______, _______, _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   _______, _______,
 	_______, _______, _______, _______, _______, _______, KC_F5,   KC_F6,   KC_F7,   KC_F8,            KC_ENT,
 	_______,          KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
-	_______, KC_LALT, KC_C,             KC_SPC,                    _______,          _______, _______, _______
+	_______, KC_LALT, KC_C,             KC_SPC,                    KC_B,             _______, _______, _______
 )
 };
 
 uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-		case LT(1, KC_SPC):
-        case LT(2, KC_ENT):
+		case LOWER:
+        case RAISE:
             return 0;
         default:
             return QUICK_TAP_TERM;
+    }
+}
+
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case RAISE:
+            // Immediately select the hold action when another key is pressed.
+            return true;
+        default:
+            // Do not select the hold action when another key is pressed.
+            return false;
     }
 }
