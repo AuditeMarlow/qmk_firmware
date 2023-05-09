@@ -3,9 +3,8 @@
 
 #pragma once
 
-/* #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY */
-
 #define IGNORE_MOD_TAP_INTERRUPT
+#define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 240
 #define RETRO_TAPPING
 
