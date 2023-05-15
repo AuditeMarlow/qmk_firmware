@@ -3,11 +3,6 @@
 
 #include QMK_KEYBOARD_H
 
-typedef struct {
-    bool is_press_action;
-    uint8_t step;
-} tap;
-
 enum layers {
 	L0,
 	L1,
@@ -16,19 +11,21 @@ enum layers {
 	L4
 };
 
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
-    DOUBLE_TAP,
-    DOUBLE_HOLD,
-    DOUBLE_SINGLE_TAP,
-    MORE_TAPS
-};
+typedef enum {
+	TD_NONE,
+	TD_UNKNOWN,
+	TD_SINGLE_TAP,
+	TD_SINGLE_HOLD,
+	TD_DOUBLE_TAP,
+	TD_DOUBLE_HOLD,
+	TD_DOUBLE_SINGLE_TAP, // Send two single taps
+	TD_MORE_TAPS
+} td_state_t;
 
-static tap dance_state = {
-    .is_press_action = true,
-    .step = 0
-};
+typedef struct {
+	bool is_press_action;
+	td_state_t state;
+} td_tap_t;
 
 enum tap_dance_codes {
 	BSLS,
@@ -50,6 +47,7 @@ enum tap_dance_codes {
 #define MT_ENT MT(MOD_RGUI, KC_ENT)
 
 // Tap dances
+#define TD_L1 TD(L1_HOLD_TOGGLE)
 #define TD_BSLS TD(BSLS)
 #define TD_PIPE TD(PIPE)
 #define TD_COMM TD(COMM)
@@ -157,48 +155,55 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-void dance_default_each(tap_dance_state_t *state, void *user_data, uint16_t kc_tap) {
-	if (state->count == 3) {
-        tap_code16(kc_tap);
-        tap_code16(kc_tap);
-        tap_code16(kc_tap);
-    }
-    if (state->count > 3) {
-        tap_code16(kc_tap);
-    }
+td_state_t cur_dance(tap_dance_state_t *state) {
+	if (state->count == 1) {
+		if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
+		else return TD_SINGLE_HOLD;
+	} else if (state->count == 2) {
+		if (state->interrupted) return TD_DOUBLE_SINGLE_TAP;
+		else if (state->pressed) return TD_DOUBLE_HOLD;
+		else return TD_DOUBLE_TAP;
+	}
+	return TD_MORE_TAPS;
 }
 
-uint8_t dance_default_step(tap_dance_state_t *state) {
-	if (state->count == 1) {
-		if (state->interrupted || !state->pressed) return SINGLE_TAP;
-		else return SINGLE_HOLD;
-	} else if (state->count == 2) {
-		if (state->interrupted) return DOUBLE_SINGLE_TAP;
-		else if (state->pressed) return DOUBLE_HOLD;
-		else return DOUBLE_TAP;
+static td_tap_t tap_state = {
+	.is_press_action = true,
+	.state = TD_NONE
+};
+
+void dance_default_each(tap_dance_state_t *state, void *user_data, uint16_t kc_tap) {
+	if (state->count == 3) {
+		tap_code16(kc_tap);
+		tap_code16(kc_tap);
+		tap_code16(kc_tap);
 	}
-	return MORE_TAPS;
+	if (state->count > 3) {
+		tap_code16(kc_tap);
+	}
 }
 
 void dance_default_finished(tap_dance_state_t *state, void *user_data, uint16_t kc_tap, uint16_t kc_hold) {
-	dance_state.step = dance_default_step(state);
-	switch (dance_state.step) {
-		case SINGLE_TAP: register_code16(kc_tap); break;
-		case SINGLE_HOLD: register_code16(kc_hold); break;
-		case DOUBLE_TAP: register_code16(kc_tap); register_code16(kc_tap); break;
-		case DOUBLE_SINGLE_TAP: tap_code16(kc_tap); register_code16(kc_tap);
+	tap_state.state = cur_dance(state);
+	switch (tap_state.state) {
+		case TD_SINGLE_TAP: register_code16(kc_tap); break;
+		case TD_SINGLE_HOLD: register_code16(kc_hold); break;
+		case TD_DOUBLE_TAP: register_code16(kc_tap); register_code16(kc_tap); break;
+		case TD_DOUBLE_SINGLE_TAP: tap_code16(kc_tap); register_code16(kc_tap); break;
+		default: break;
 	}
 }
 
 void dance_default_reset(tap_dance_state_t *state, void *user_data, uint16_t kc_tap, uint16_t kc_hold) {
 	wait_ms(10);
-	switch (dance_state.step) {
-		case SINGLE_TAP: unregister_code16(kc_tap); break;
-		case SINGLE_HOLD: unregister_code16(kc_hold); break;
-		case DOUBLE_TAP: unregister_code16(kc_tap); break;
-		case DOUBLE_SINGLE_TAP: unregister_code16(kc_tap); break;
+	switch (tap_state.state) {
+		case TD_SINGLE_TAP: unregister_code16(kc_tap); break;
+		case TD_SINGLE_HOLD: unregister_code16(kc_hold); break;
+		case TD_DOUBLE_TAP: unregister_code16(kc_tap); break;
+		case TD_DOUBLE_SINGLE_TAP: unregister_code16(kc_tap); break;
+		default: break;
 	}
-	dance_state.step = 0;
+	tap_state.state = TD_NONE;
 }
 
 void dance_bsls_each(tap_dance_state_t *state, void *user_data) {
