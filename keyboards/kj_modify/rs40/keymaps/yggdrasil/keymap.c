@@ -47,7 +47,6 @@ enum tap_dance_codes {
 #define MT_ENT MT(MOD_RGUI, KC_ENT)
 
 // Tap dances
-#define TD_L1 TD(L1_HOLD_TOGGLE)
 #define TD_BSLS TD(BSLS)
 #define TD_PIPE TD(PIPE)
 #define TD_COMM TD(COMM)
@@ -113,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [L2] = LAYOUT(
 	_______, _______, KC_MPLY, KC_MPRV, KC_MNXT, KC_UNDS, KC_MINS, KC_7,    KC_8,    KC_9,    KC_0,    _______,
 	_______, _______, _______, KC_VOLD, KC_VOLU, KC_PLUS, KC_EQL,  KC_4,    KC_5,    KC_6,             _______,
-	_______,          _______, KC_PAST, _______, _______, KC_PDOT, KC_0,    KC_1,    KC_2,    KC_3,    _______,
+	_______,          _______, KC_PAST, _______, _______, KC_DOT,  KC_0,    KC_1,    KC_2,    KC_3,    _______,
 	_______, _______, QK_BOOT,          TO(L0),                    TO(L1),           _______, _______, _______
 ),
 
