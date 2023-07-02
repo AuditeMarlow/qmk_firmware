@@ -4,11 +4,11 @@
 #include QMK_KEYBOARD_H
 
 enum layers {
-	L0,
-	L1,
-	L2,
-	L3,
-	L4
+	_L0,
+	_L1,
+	_L2,
+	_L3,
+	_L4
 };
 
 typedef enum {
@@ -28,6 +28,7 @@ typedef struct {
 } td_tap_t;
 
 enum tap_dance_codes {
+	L1,
 	BSLS,
 	PIPE,
 	COMM,
@@ -47,6 +48,7 @@ enum tap_dance_codes {
 #define MT_ENT MT(MOD_RGUI, KC_ENT)
 
 // Tap dances
+#define TD_L1 TD(L1)
 #define TD_BSLS TD(BSLS)
 #define TD_PIPE TD(PIPE)
 #define TD_COMM TD(COMM)
@@ -73,11 +75,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |         |       | L4      | Space           | L1                 | Del      |       |         |
  * '-----------------------------------------------------------------------------------------------'
  */
-[L0] = LAYOUT(
+[_L0] = LAYOUT(
 	KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
 	KC_ESC,  MT_A,    MT_S,    MT_D,    MT_F,    KC_G,    KC_H,    MT_J,    MT_K,    MT_L,             MT_ENT,
 	KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    TD_COMM, TD_DOT,  TD_SLSH,
-	_______, _______, TO(L4),           KC_SPC,                    TO(L1),           KC_DEL,  _______, _______
+	_______, _______, TO(_L4),          KC_SPC,                    TO(_L1),          KC_DEL,  _______, _______
 ),
 
 /* Symbols
@@ -91,11 +93,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |         |       |         | L0              | L2                 |          |       |         |
  * '-----------------------------------------------------------------------------------------------'
  */
-[L1] = LAYOUT(
+[_L1] = LAYOUT(
 	_______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_SCLN, KC_COLN, _______,
 	_______, KC_TILD, _______, KC_EQL,  TD_QUOT, _______, TD_BSLS, KC_LCBR, KC_RCBR, TD_PIPE,          _______,
-	_______,          _______, _______, _______, KC_DQUO, _______, KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC, TO(L3),
-	_______, _______, _______,          TO(L0),                    TO(L2),           _______, _______, _______
+	_______,          _______, _______, _______, KC_DQUO, _______, KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC, TO(_L3),
+	_______, _______, _______,          TO(_L0),                   TO(_L2),          _______, _______, _______
 ),
 
 /* Numpad/Control
@@ -109,11 +111,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |         |       | Boot    | L0              | L1                 |          |       |         |
  * '-----------------------------------------------------------------------------------------------'
  */
-[L2] = LAYOUT(
+[_L2] = LAYOUT(
 	_______, _______, KC_MPLY, KC_MPRV, KC_MNXT, KC_UNDS, KC_MINS, KC_7,    KC_8,    KC_9,    KC_0,    _______,
 	_______, _______, _______, KC_VOLD, KC_VOLU, KC_PLUS, KC_EQL,  KC_4,    KC_5,    KC_6,             _______,
 	_______,          _______, KC_PAST, _______, _______, KC_DOT,  KC_0,    KC_1,    KC_2,    KC_3,    _______,
-	_______, _______, QK_BOOT,          TO(L0),                    TO(L1),           _______, _______, _______
+	_______, _______, QK_BOOT,          TO(_L0),                   TO(_L1),          _______, _______, _______
 ),
 
 /* Navigation
@@ -127,11 +129,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |         |       |         | L0              | L1                 |          |       |         |
  * '-----------------------------------------------------------------------------------------------'
  */
-[L3] = LAYOUT(
+[_L3] = LAYOUT(
 	_______, _______, KC_WH_L, KC_MS_U, KC_WH_R, _______, NV_BWD,  NV_PTAB, NV_NTAB, NV_FWD,  _______, _______,
 	_______, _______, KC_MS_L, KC_MS_D, KC_MS_R, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,          _______,
 	_______,          _______, _______, KC_WH_U, KC_WH_D, KC_BTN2, KC_BTN1, KC_ACL0, KC_ACL1, KC_ACL2, _______,
-	_______, _______, _______,          TO(L0),                    TO(L1),           _______, _______, _______
+	_______, _______, _______,          TO(_L0),                   TO(_L1),          _______, _______, _______
 ),
 
 /* Game
@@ -145,11 +147,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Ctrl    | Alt   | C       | Space           | X                  | H        |       | L0      |
  * '-----------------------------------------------------------------------------------------------'
  */
-[L4] = LAYOUT(
+[_L4] = LAYOUT(
 	KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   _______, _______,
 	KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_F5,   KC_F6,   KC_F7,   KC_F8,            KC_ENT,
 	KC_LSFT,          KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
-	KC_LCTL, KC_LALT, KC_C,             KC_SPC,                    KC_X,             KC_H,    _______, TO(L0)
+	KC_LCTL, KC_LALT, KC_C,             KC_SPC,                    KC_X,             KC_H,    _______, TO(_L0)
 )
 
 };
@@ -194,13 +196,34 @@ void dance_default_finished(tap_dance_state_t *state, void *user_data, uint16_t 
 }
 
 void dance_default_reset(tap_dance_state_t *state, void *user_data, uint16_t kc_tap, uint16_t kc_hold) {
-	wait_ms(10);
 	switch (tap_state.state) {
 		case TD_SINGLE_TAP: unregister_code16(kc_tap); break;
 		case TD_SINGLE_HOLD: unregister_code16(kc_hold); break;
 		case TD_DOUBLE_TAP: unregister_code16(kc_tap); break;
 		case TD_DOUBLE_SINGLE_TAP: unregister_code16(kc_tap); break;
 		default: break;
+	}
+	tap_state.state = TD_NONE;
+}
+
+void l1_finished(tap_dance_state_t *state, void *user_data) {
+	tap_state.state = cur_dance(state);
+	switch (tap_state.state) {
+		case TD_SINGLE_TAP:
+			if (layer_state_is(_L1)) {
+				layer_off(_L1);
+			} else {
+				layer_on(_L1);
+			}
+			break;
+		case TD_SINGLE_HOLD: layer_on(_L1); break;
+		default: break;
+	}
+}
+
+void l1_reset(tap_dance_state_t *state, void *user_data) {
+	if (tap_state.state == TD_SINGLE_HOLD) {
+		layer_off(_L1);
 	}
 	tap_state.state = TD_NONE;
 }
@@ -266,6 +289,7 @@ void dance_quot_reset(tap_dance_state_t *state, void *user_data) {
 }
 
 tap_dance_action_t tap_dance_actions[] = {
+	[L1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, l1_finished, l1_reset),
 	[BSLS] = ACTION_TAP_DANCE_FN_ADVANCED(dance_bsls_each, dance_bsls_finished, dance_bsls_reset),
 	[PIPE] = ACTION_TAP_DANCE_FN_ADVANCED(dance_pipe_each, dance_pipe_finished, dance_pipe_reset),
 	[COMM] = ACTION_TAP_DANCE_FN_ADVANCED(dance_comm_each, dance_comm_finished, dance_comm_reset),

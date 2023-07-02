@@ -3,10 +3,8 @@
 
 #pragma once
 
-/* #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY */
-
 #define IGNORE_MOD_TAP_INTERRUPT
-#define TAPPING_TERM 240
+#define TAPPING_TERM 200
 #define RETRO_TAPPING
 
 #define MOUSEKEY_DELAY 5
