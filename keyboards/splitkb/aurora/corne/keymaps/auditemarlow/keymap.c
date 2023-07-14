@@ -2,10 +2,17 @@
 
 enum layers {
 	_QWERTY,
+	_COLEMAK_DH,
 	_LOWER,
 	_RAISE,
 	_NAVIGATION,
-	_GAME
+	_GAME,
+	_ONESHOT
+};
+
+enum keycodes {
+	QWERTY = SAFE_RANGE,
+	COLEMAK
 };
 
 typedef enum {
@@ -30,20 +37,28 @@ enum tap_dance_codes {
 };
 
 // Layer keys
-#define L_RAISE MO(_RAISE)
+#define L_GAME TG(_GAME)
 #define L_LOWER MO(_LOWER)
 #define L_NAVI MO(_NAVIGATION)
-#define L_GAME TG(_GAME)
+#define L_RAISE MO(_RAISE)
+#define L_OSHOT OSL(_ONESHOT)
 
 // Home-row mod keys
-#define MT_A MT(MOD_LGUI, KC_A)
-#define MT_S MT(MOD_LALT, KC_S)
-#define MT_D MT(MOD_LSFT, KC_D)
-#define MT_F MT(MOD_LCTL, KC_F)
-#define MT_J MT(MOD_RCTL, KC_J)
-#define MT_K MT(MOD_RSFT, KC_K)
-#define MT_L MT(MOD_RALT, KC_L)
-#define MT_SCLN MT(MOD_RGUI, KC_SCLN)
+#define LA_R MT(MOD_LALT, KC_R)
+#define LA_S MT(MOD_LALT, KC_S)
+#define LC_F MT(MOD_LCTL, KC_F)
+#define LC_T MT(MOD_LCTL, KC_T)
+#define LG_A MT(MOD_LGUI, KC_A)
+#define LS_D MT(MOD_LSFT, KC_D)
+#define LS_S MT(MOD_LSFT, KC_S)
+#define RA_I MT(MOD_RALT, KC_I)
+#define RA_L MT(MOD_RALT, KC_L)
+#define RC_J MT(MOD_RCTL, KC_J)
+#define RC_N MT(MOD_RCTL, KC_N)
+#define RG_O MT(MOD_RGUI, KC_O)
+#define RG_SCLN MT(MOD_RGUI, KC_SCLN)
+#define RS_E MT(MOD_RSFT, KC_E)
+#define RS_K MT(MOD_RSFT, KC_K)
 
 // Tap dances
 #define TD_BSLS TD(BSLS)
@@ -57,7 +72,7 @@ enum tap_dance_codes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-	/* Base
+	/* QWERTY
 	 *
 	 *.-----------------------------------------------------,                          ,-----------------------------------------------------.
 	 *| Tab    | Q      | W      | E      | R      | T      |                          | Y      | U      | I      | O      | P      | Bspc   |
@@ -71,9 +86,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	 */
 	[_QWERTY] = LAYOUT_split_3x6_3(
 		KC_TAB,	 KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
-		KC_ESC,  MT_A,    MT_S,    MT_D,    MT_F,    KC_G,                               KC_H,    MT_J,    MT_K,    MT_L,    MT_SCLN, KC_QUOT,
+		KC_ESC,  LG_A,    LA_S,    LS_D,    LC_F,    KC_G,                               KC_H,    RC_J,    RS_K,    RA_L,    RG_SCLN, KC_QUOT,
 		KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                               KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-								            KC_LGUI, L_LOWER, KC_SPC,           KC_ENT,  L_RAISE, KC_DEL
+								            L_OSHOT, L_LOWER, KC_SPC,           KC_ENT,  L_RAISE, KC_DEL
+	),
+
+	/* Colemak-DH
+	 *
+	 *.-----------------------------------------------------,                          ,-----------------------------------------------------.
+	 *| Tab    | Q      | W      | F      | P      | B      |                          | J      | L      | U      | Y      | ;      | Bspc   |
+	 *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+	 *| Escape | A      | R      | S      | T      | G      |                          | M      | N      | E      | I      | O      | '      |
+	 *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+	 *| Shift  | Z      | X      | C      | D      | V      |                          | K      | H      | ,      | .      | /      | Shift  |
+	 *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
+	 *                                    | GUI    | L1     | Space  |        | Enter  | L2     | Del    |
+	 *                                    '--------------------------'        '--------------------------'
+	 */
+	[_COLEMAK_DH] = LAYOUT_split_3x6_3(
+		KC_TAB,	 KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
+		KC_ESC,  LG_A,    LA_R,    LS_S,    LC_T,    KC_G,                               KC_M,    RC_N,    RS_E,    RA_I,    RG_O,    KC_QUOT,
+		KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                               KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+								            L_OSHOT, L_LOWER, KC_SPC,           KC_ENT,  L_RAISE, KC_DEL
 	),
 
 	/* Numpad/Control
@@ -152,7 +186,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 								            KC_LALT, KC_C,    KC_SPC,           KC_ENT,  L_GAME,  _______
 	),
 
+	/* One shot
+	 *
+	 *.-----------------------------------------------------,                          ,----------------------------------------------------.
+	 *|        |        |        |        |        |        |                          |        |        |        |        |        |        |
+	 *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+	 *|        |        |        |        |        |        |                          |        |        |        |        |        |        |
+	 *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+	 *|        | Colemak| QWERTY |        |        |        |                          |        |        |        |        |        |        |
+	 *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
+	 *                                    |        |        |        |        |        |        |        |
+	 *                                    '--------------------------'        '--------------------------'
+	 */
+	[_ONESHOT] = LAYOUT_split_3x6_3(
+		_______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+		_______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+		_______, COLEMAK, QWERTY,  _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+		                                    _______, _______, _______,          _______, _______, _______
+	),
+
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	switch (keycode) {
+		case QWERTY:
+			if (record->event.pressed) {
+				set_single_persistent_default_layer(_QWERTY);
+			}
+			return false;
+		case COLEMAK:
+			if (record->event.pressed) {
+				set_single_persistent_default_layer(_COLEMAK_DH);
+			}
+			return false;
+	}
+	return true;
+}
 
 td_state_t cur_dance(tap_dance_state_t *state) {
 	if (state->count == 1) {
