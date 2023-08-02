@@ -4,7 +4,7 @@
 #pragma once
 
 #define TAPPING_TERM 200
-#define RETRO_TAPPING
+#define RETRO_TAPPING_PER_KEY
 
 #define MOUSEKEY_DELAY 5
 #define MOUSEKEY_INTERVAL 16
