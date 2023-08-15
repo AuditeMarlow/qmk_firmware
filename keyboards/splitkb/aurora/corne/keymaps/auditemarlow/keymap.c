@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 
 enum layers {
-    _QWERTY,
+    _QWERTY = 0,
     _COLEMAK_DH,
     _LOWER,
     _RAISE,
@@ -38,9 +38,9 @@ enum tap_dance_codes {
 
 // Layer keys
 #define L_GAME TG(_GAME)
-#define L_LOWER MO(_LOWER)
+#define L_LOWER QK_TRI_LAYER_LOWER
 #define L_NAVI MO(_NAVIGATION)
-#define L_RAISE MO(_RAISE)
+#define L_RAISE QK_TRI_LAYER_UPPER
 #define L_OSHOT OSL(_ONESHOT)
 
 // Home-row mod keys
@@ -126,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, KC_MPLY, KC_MPRV, KC_MNXT, KC_UNDS,                            KC_MINS, KC_7,    KC_8,    KC_9,    KC_0,    _______,
         _______, _______, _______, KC_VOLD, KC_VOLU, KC_PLUS,                            KC_EQL,  KC_4,    KC_5,    KC_6,    _______, _______,
         _______, _______, _______, _______, _______, KC_DOT,                             KC_0,    KC_1,    KC_2,    KC_3,    _______, _______,
-                                            _______, _______, _______,          _______, L_NAVI,  _______
+                                            _______, _______, _______,          _______, _______, _______
     ),
 
     /* Numpad/Control
@@ -145,7 +145,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______,
         _______, KC_GRV,  KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC,                            TD_BSLS, KC_LCBR, KC_RCBR, TD_PIPE, _______, _______,
         _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
-                                            L_GAME,  L_NAVI,  _______,          _______, _______, _______
+                                            L_GAME,  _______, _______,          _______, _______, _______
     ),
 
     /* Navigation
