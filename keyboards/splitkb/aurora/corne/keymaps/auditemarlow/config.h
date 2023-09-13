@@ -3,22 +3,28 @@
 
 #pragma once
 
+#undef TAPPING_TERM
 #define TAPPING_TERM 200
-#define RETRO_TAPPING_PER_KEY
 
-#define MOUSEKEY_DELAY 5
-#define MOUSEKEY_INTERVAL 16
-#define MOUSEKEY_MOVE_DELTA 1
-#define MOUSEKEY_INITIAL_SPEED 1
-#define MOUSEKEY_DECELERATED_SPEED 12
-#define MOUSEKEY_MAX_SPEED 22
-#define USB_SUSPEND_WAKEUP_DELAY 0
-#define MOUSEKEY_WHEEL_INTERVAL 83
+// Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
+#define QUICK_TAP_TERM 0
 
-#define MOUSEKEY_WHEEL_INTERVAL 83
+// Auto Shift
+#define NO_AUTO_SHIFT_ALPHA
+#define AUTO_SHIFT_TIMEOUT TAPPING_TERM
+#define AUTO_SHIFT_NO_SETUP
 
-#define MOUSEKEY_WHEEL_MAX_SPEED 3
 
-#define TRI_LAYER_LOWER_LAYER 2
-#define TRI_LAYER_UPPER_LAYER 3
-#define TRI_LAYER_ADJUST_LAYER 4
+// Mouse key speed and acceleration.
+#undef MOUSEKEY_DELAY
+#define MOUSEKEY_DELAY          0
+#undef MOUSEKEY_INTERVAL
+#define MOUSEKEY_INTERVAL       16
+#undef MOUSEKEY_WHEEL_DELAY
+#define MOUSEKEY_WHEEL_DELAY    0
+#undef MOUSEKEY_MAX_SPEED
+#define MOUSEKEY_MAX_SPEED      6
+#undef MOUSEKEY_TIME_TO_MAX
+#define MOUSEKEY_TIME_TO_MAX    64
+
+/* #define RETRO_TAPPING_PER_KEY */

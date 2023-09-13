@@ -1,47 +1,42 @@
 #include QMK_KEYBOARD_H
 
 enum layers {
-    _QWERTY = 0,
-    _COLEMAK_DH,
-    _LOWER,
-    _RAISE,
-    _NAVIGATION,
-    _GAME,
-    _ONESHOT
+	L_BASE_QWERTY = 0,
+	L_BASE_COLEMAKDH,
+	L_MEDIA,
+	L_NAV,
+	L_MOUSE,
+	L_BUTTON,
+	L_SYM,
+	L_NUM,
+	L_FUN,
+    L_GAME
 };
 
-enum keycodes {
-    QWERTY = SAFE_RANGE,
-    COLEMAK
-};
-
-typedef enum {
-    TD_NONE,
-    TD_UNKNOWN,
-    TD_SINGLE_TAP,
-    TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP,
-    TD_DOUBLE_HOLD,
-    TD_DOUBLE_SINGLE_TAP, // Send two single taps
-    TD_MORE_TAPS
-} td_state_t;
-
-typedef struct {
-    bool is_press_action;
-    td_state_t state;
-} td_tap_t;
-
-enum tap_dance_codes {
-    BSLS,
-    PIPE
+enum tap_dances {
+    U_TD_BOOT
 };
 
 // Layer keys
-#define L_GAME TG(_GAME)
-#define L_LOWER QK_TRI_LAYER_LOWER
-#define L_NAVI MO(_NAVIGATION)
-#define L_RAISE QK_TRI_LAYER_UPPER
-#define L_OSHOT OSL(_ONESHOT)
+#define LT_GAME TG(L_GAME)
+
+#define LT_MDIA LT(L_MEDIA, KC_ESC)
+#define LT_ESC LT(L_MEDIA, KC_ESC)
+#define LT_NAV LT(L_NAV, KC_SPC)
+#define LT_SPC LT(L_NAV, KC_SPC)
+#define LT_MOUS LT(L_MOUSE, KC_TAB)
+#define LT_TAB LT(L_MOUSE, KC_TAB)
+#define LT_SYM LT(L_SYM, KC_ENT)
+#define LT_ENT LT(L_SYM, KC_ENT)
+#define LT_NUM LT(L_NUM, KC_BSPC)
+#define LT_BSPC LT(L_NUM, KC_BSPC)
+#define LT_FUN LT(L_FUN, KC_DEL)
+#define LT_DEL LT(L_FUN, KC_DEL)
+#define LT_Z LT(L_BUTTON, KC_Z)
+#define LT_SLSH LT(L_BUTTON, KC_SLSH)
+
+// Tap dances
+#define TD_BOOT TD(U_TD_BOOT)
 
 // Home-row mod keys
 #define LA_R MT(MOD_LALT, KC_R)
@@ -57,114 +52,162 @@ enum tap_dance_codes {
 #define RC_N MT(MOD_RCTL, KC_N)
 #define RG_O MT(MOD_RGUI, KC_O)
 #define RG_SCLN MT(MOD_RGUI, KC_SCLN)
+#define RG_QUOT MT(MOD_RGUI, KC_QUOT)
 #define RS_E MT(MOD_RSFT, KC_E)
 #define RS_K MT(MOD_RSFT, KC_K)
 
-// Tap dances
-#define TD_BSLS TD(BSLS)
-#define TD_PIPE TD(PIPE)
-
-// Navigation
-#define NV_BWD LALT(KC_LEFT)
-#define NV_FWD LALT(KC_RGHT)
-#define NV_PTAB LCTL(LSFT(KC_TAB))
-#define NV_NTAB LCTL(KC_TAB)
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-    /* QWERTY
+    /* Base QWERTY
      *
      *.-----------------------------------------------------,                          ,-----------------------------------------------------.
-     *| Tab    | Q      | W      | E      | R      | T      |                          | Y      | U      | I      | O      | P      | Bspc   |
+     *|        | Q      | W      | E      | R      | T      |                          | Y      | U      | I      | O      | P      |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *| Escape | A      | S      | D      | F      | G      |                          | H      | J      | K      | L      | ;      | '      |
+     *|        | A      | S      | D      | F      | G      |                          | H      | J      | K      | L      | '      |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *| Shift  | Z      | X      | C      | V      | B      |                          | N      | M      | ,      | .      | /      | Shift  |
+     *|        | Z      | X      | C      | V      | B      |                          | N      | M      | ,      | .      | /      |        |
      *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
-     *                                    | GUI    | L1     | Space  |        | Enter  | L2     | Del    |
+     *                                    | Escape | Space  | Tab    |        | Enter  | Bspc   | Del    |
      *                                    '--------------------------'        '--------------------------'
      */
-    [_QWERTY] = LAYOUT_split_3x6_3(
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
-        KC_ESC,  LG_A,    LA_S,    LS_D,    LC_F,    KC_G,                               KC_H,    RC_J,    RS_K,    RA_L,    RG_SCLN, KC_QUOT,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                               KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                                            L_OSHOT, L_LOWER, KC_SPC,           KC_ENT,  L_RAISE, KC_DEL
+    [L_BASE_QWERTY] = LAYOUT_split_3x6_3(
+        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______,
+        _______, LG_A,    LA_S,    LS_D,    LC_F,    KC_G,                               KC_H,    RC_J,    RS_K,    RA_L,    RG_QUOT, _______,
+        _______, LT_Z,    KC_X,    KC_C,    KC_V,    KC_B,                               KC_N,    KC_M,    KC_COMM, KC_DOT,  LT_SLSH, _______,
+                                            LT_MDIA, LT_NAV,  LT_MOUS,          LT_SYM,  LT_NUM,  LT_FUN
     ),
 
-    /* Colemak-DH
+    /* Nav
      *
      *.-----------------------------------------------------,                          ,-----------------------------------------------------.
-     *| Tab    | Q      | W      | F      | P      | B      |                          | J      | L      | U      | Y      | ;      | Bspc   |
+     *|        |        |        |        |        |        |                          | Redo   | Paste  | Copy   | Cut    | Undo   |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *| Escape | A      | R      | S      | T      | G      |                          | M      | N      | E      | I      | O      | '      |
+     *|        | GUI    | Alt    | Shift  | Ctrl   |        |                          | Left   | Down   | Up     | Right  | Caps   |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *| Shift  | Z      | X      | C      | D      | V      |                          | K      | H      | ,      | .      | /      | Shift  |
+     *|        |        |        |        |        |        |                          | Home   | PgDwn  | PgUp   | End    | Insert |        |
      *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
-     *                                    | GUI    | L1     | Space  |        | Enter  | L2     | Del    |
+     *                                    |        |        |        |        | Enter  | Bspc   | Del    |
      *                                    '--------------------------'        '--------------------------'
      */
-    [_COLEMAK_DH] = LAYOUT_split_3x6_3(
-        KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
-        KC_ESC,  LG_A,    LA_R,    LS_S,    LC_T,    KC_G,                               KC_M,    RC_N,    RS_E,    RA_I,    RG_O,    KC_QUOT,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                               KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                                            L_OSHOT, L_LOWER, KC_SPC,           KC_ENT,  L_RAISE, KC_DEL
+    [L_NAV] = LAYOUT_split_3x6_3(
+        _______, TD_BOOT, _______, _______, _______, _______,                            C(KC_Y), C(KC_V), C(KC_C), C(KC_X), C(KC_Z), _______,
+        _______, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, _______,
+        _______, _______, _______, _______, _______, _______,                            KC_HOME, KC_PGDN, KC_PGUP, KC_END,  KC_INS,  _______,
+                                            _______, _______, _______,          KC_ENT,  KC_BSPC, KC_DEL
     ),
 
-    /* Numpad/Control
+    /* Mouse
      *
      *.-----------------------------------------------------,                          ,-----------------------------------------------------.
-     *|        |        | MPlay  | MNext  | MPrev  | _      |                          | -      | 7      | 8      | 9      | 0      |        |
+     *|        |        |        |        |        |        |                          | Redo   | Paste  | Copy   | Cut    | Undo   |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        |        |        | VolD   | VolU   | +      |                          | =      | 4      | 5      | 6      |        |        |
+     *|        | GUI    | Alt    | Shift  | Ctrl   |        |                          | MLeft  | MDown  | MUp    | MRight |        |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        |        |        | LEDD   | LEDU   | .      |                          | 0      | 1      | 2      | 3      |        |        |
+     *|        |        |        |        |        |        |                          | MWLeft | MWDown | MWUp   | MWRght |        |        |
      *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
-     *                                    |        |        |        |        |        | L3     |        |
+     *                                    |        |        |        |        | Enter  | Bspc   | Del    |
      *                                    '--------------------------'        '--------------------------'
      */
-    [_LOWER] = LAYOUT_split_3x6_3(
-        _______, _______, KC_MPLY, KC_MPRV, KC_MNXT, KC_UNDS,                            KC_MINS, KC_7,    KC_8,    KC_9,    KC_0,    _______,
-        _______, _______, _______, KC_VOLD, KC_VOLU, KC_PLUS,                            KC_EQL,  KC_4,    KC_5,    KC_6,    _______, _______,
-        _______, _______, _______, _______, _______, KC_DOT,                             KC_0,    KC_1,    KC_2,    KC_3,    _______, _______,
-                                            _______, _______, _______,          _______, _______, _______
+    [L_MOUSE] = LAYOUT_split_3x6_3(
+        _______, TD_BOOT, _______, _______, _______, _______,                            C(KC_Y), C(KC_V), C(KC_C), C(KC_X), C(KC_Z), _______,
+        _______, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,                            KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
+        _______, _______, _______, _______, _______, _______,                            KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______, _______,
+                                            _______, _______, _______,          KC_BTN2, KC_BTN1, KC_BTN3
     ),
 
-    /* Numpad/Control
+    /* Button
      *
      *.-----------------------------------------------------,                          ,-----------------------------------------------------.
-     *|        | !      | @      | #      | $      | %      |                          | ^      | &      | *      | (      | )      |        |
+     *|        | Undo   | Cut    | Copy   | Paste  | Redo   |                          | Redo   | Paste  | Copy   | Cut    | Undo   |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        | `      | -      | =      | [      | ]      |                          | \      | {      | }      | |      |        |        |
+     *|        | GUI    | Alt    | Shift  | Ctrl   |        |                          |        | Ctrl   | Shift  | Alt    | GUI    |        |
+     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+     *|        | Undo   | Cut    | Copy   | Paste  | Redo   |                          | Redo   | Paste  | Copy   | Cut    | Undo   |        |
+     *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
+     *                                    |        |        |        |        | Enter  | Bspc   | Del    |
+     *                                    '--------------------------'        '--------------------------'
+     */
+    [L_BUTTON] = LAYOUT_split_3x6_3(
+        _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_Y),                            C(KC_Y), C(KC_V), C(KC_C), C(KC_X), C(KC_Z), _______,
+        _______, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,                            _______, KC_RCTL, KC_RSFT, KC_RALT, KC_RGUI, _______,
+        _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_Y),                            C(KC_Y), C(KC_V), C(KC_C), C(KC_X), C(KC_Z), _______,
+                                            KC_BTN3,  KC_BTN1, KC_BTN2,         KC_BTN2, KC_BTN1, KC_BTN3
+    ),
+
+    /* Media
+     *
+     *.-----------------------------------------------------,                          ,-----------------------------------------------------.
+     *|        |        |        |        |        |        |                          |        |        |        |        |        |        |
+     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+     *|        | GUI    | Alt    | Shift  | Ctrl   |        |                          | MPrev  | VolD   | VolU   | MNext  |        |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
      *|        |        |        |        |        |        |                          |        |        |        |        |        |        |
      *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
-     *                                    | L4     | L3     |        |        |        |        |        |
+     *                                    |        |        |        |        | MStop  | MPlay  | Mute   |
      *                                    '--------------------------'        '--------------------------'
      */
-    [_RAISE] = LAYOUT_split_3x6_3(
-        _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______,
-        _______, KC_GRV,  KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC,                            TD_BSLS, KC_LCBR, KC_RCBR, TD_PIPE, _______, _______,
+    [L_MEDIA] = LAYOUT_split_3x6_3(
+        _______, TD_BOOT, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+        _______, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,                            KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, _______, _______,
         _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
-                                            L_GAME,  _______, _______,          _______, _______, _______
+                                            _______, _______, _______,          KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
-    /* Navigation
+    /* Num
      *
-     *.-----------------------------------------------------,                          ,----------------------------------------------------.
-     *|        |        | ScLeft | MUp    | ScRght |        |                          | Bwd    | PTab   | NTab   | Fwd    |        |        |
+     *.-----------------------------------------------------,                          ,-----------------------------------------------------.
+     *|        | [      | 7      | 8      | 9      | ]      |                          |        |        |        |        |        |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        |        | MLeft  | MDown  | MRight |        |                          | Left   | Down   | Up     | Right  |        |        |
+     *|        | ;      | 4      | 5      | 6      | =      |                          |        | Ctrl   | Shift  | Alt    | GUI    |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        |        |        | ScUp   | ScDown | RClick |                          | LClick | ACL1   | ACL2   | ACL3   |        |        |
+     *|        | `      | 1      | 2      | 3      | \      |                          |        |        |        |        |        |        |
      *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
-     *                                    |        |        |        |        |        |        |        |
+     *                                    | .      | 0      | -      |        |        |        |        |
      *                                    '--------------------------'        '--------------------------'
      */
-    [_NAVIGATION] = LAYOUT_split_3x6_3(
-        _______, _______, KC_WH_L, KC_MS_U, KC_WH_R, _______,                            NV_BWD,  NV_PTAB, NV_NTAB, NV_FWD,  _______, _______,
-        _______, _______, KC_MS_L, KC_MS_D, KC_MS_R, _______,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,
-        _______, _______, _______, KC_WH_U, KC_WH_D, KC_BTN1,                            KC_BTN2, KC_ACL0, KC_ACL1, KC_ACL2, _______, _______,
-                                            _______, _______, _______,          _______, _______, _______
+    [L_NUM] = LAYOUT_split_3x6_3(
+        _______, KC_LBRC, KC_7,    KC_8,    KC_9,    KC_RBRC,                            _______, _______, _______, _______, TD_BOOT, _______,
+        _______, KC_SCLN, KC_4,    KC_5,    KC_6,    KC_EQL,                             _______, KC_RCTL, KC_RSFT, KC_RALT, KC_RGUI, _______,
+        _______, KC_GRV,  KC_1,    KC_2,    KC_3,    KC_BSLS,                            _______, _______, _______, _______, _______, _______,
+                                            KC_DOT,  KC_0,    KC_MINS,          _______, _______, _______
+    ),
+
+    /* Sym
+     *
+     *.-----------------------------------------------------,                          ,-----------------------------------------------------.
+     *|        | {      | &      | *      | (      | }      |                          |        |        |        |        |        |        |
+     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+     *|        | :      | $      | %      | ^      | +      |                          |        | Ctrl   | Shift  | Alt    | GUI    |        |
+     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+     *|        | ~      | !      | @      | #      | |      |                          |        |        |        |        |        |        |
+     *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
+     *                                    | (      | )      | _      |        |        |        |        |
+     *                                    '--------------------------'        '--------------------------'
+     */
+    [L_SYM] = LAYOUT_split_3x6_3(
+        _______, KC_LCBR, KC_AMPR, KC_ASTR, KC_LPRN, KC_RCBR,                            _______, _______, _______, _______, TD_BOOT, _______,
+        _______, KC_COLN, KC_DLR,  KC_PERC, KC_CIRC, KC_PLUS,                            _______, KC_RCTL, KC_RSFT, KC_RALT, KC_RGUI, _______,
+        _______, KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_PIPE,                            _______, _______, _______, _______, _______, _______,
+                                            KC_LPRN, KC_RPRN, KC_UNDS,          _______, _______, _______
+    ),
+
+    /* Fun
+     *
+     *.-----------------------------------------------------,                          ,-----------------------------------------------------.
+     *|        | F12    | F7     | F8     | F9     | PrtScn |                          |        |        |        |        |        |        |
+     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+     *|        | F11    | F4     | F5     | F6     | ScrLck |                          |        | Ctrl   | Shift  | Alt    | GUI    |        |
+     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
+     *|        | F10    | F1     | F2     | F3     | Pause  |                          |        |        |        |        |        |        |
+     *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
+     *                                    | App    | Space  | Tab    |        |        |        |        |
+     *                                    '--------------------------'        '--------------------------'
+     */
+    [L_FUN] = LAYOUT_split_3x6_3(
+        _______, KC_F12,  KC_F7,   KC_F8,   KC_F9,   KC_PSCR,                            _______, _______, _______, _______, TD_BOOT, _______,
+        _______, KC_F11,  KC_F4,   KC_F5,   KC_F6,   KC_SCRL,                            _______, KC_RCTL, KC_RSFT, KC_RALT, KC_RGUI, _______,
+        _______, KC_F10,  KC_F1,   KC_F2,   KC_F3,   KC_PAUS,                            _______, _______, _______, _______, _______, _______,
+                                            KC_APP,  KC_SPC,  KC_TAB,           _______, _______, _______
     ),
 
     /* Game
@@ -179,132 +222,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | Alt    | C      | Space  |        | Enter  | L0     |        |
      *                                    '--------------------------'        '--------------------------'
      */
-    [_GAME] = LAYOUT_split_3x6_3(
+    [L_GAME] = LAYOUT_split_3x6_3(
         KC_TAB,  KC_T,    KC_Q,    KC_W,    KC_E,    KC_R,                               KC_Y,    KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
         KC_ESC,  KC_G,    KC_A,    KC_S,    KC_D,    KC_F,                               KC_H,    KC_F6,   KC_F7,   KC_F8,   KC_F9,   _______,
         KC_LCTL, KC_LSFT, KC_1,    KC_2,    KC_3,    KC_4,                               KC_N,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   _______,
                                             KC_LALT, KC_C,    KC_SPC,           KC_ENT,  L_GAME,  _______
     ),
 
-    /* One shot
-     *
-     *.-----------------------------------------------------,                          ,----------------------------------------------------.
-     *|        |        |        |        |        |        |                          |        |        |        |        |        |        |
-     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        |        |        |        |        |        |                          |        |        |        |        |        |        |
-     *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        | Colemak| QWERTY |        |        |        |                          |        |        |        |        |        |        |
-     *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
-     *                                    |        |        |        |        |        |        |        |
-     *                                    '--------------------------'        '--------------------------'
-     */
-    [_ONESHOT] = LAYOUT_split_3x6_3(
-        _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
-        _______, COLEMAK, QWERTY,  _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
-                                            _______, _______, _______,          _______, _______, _______
-    ),
-
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case QWERTY:
-            if (record->event.pressed) {
-                set_single_persistent_default_layer(_QWERTY);
-            }
-            return false;
-        case COLEMAK:
-            if (record->event.pressed) {
-                set_single_persistent_default_layer(_COLEMAK_DH);
-            }
-            return false;
-    }
-    return true;
-}
-
-bool get_retro_tapping(uint16_t keycode, keyrecord_t *record) {
-	switch (keycode) {
-		case LG_A:
-		case RG_O:
-		case RG_SCLN:
-			return false;
-		default:
-			return true;
-	}
-}
-
-td_state_t cur_dance(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
-        else return TD_SINGLE_HOLD;
-    } else if (state->count == 2) {
-        if (state->interrupted) return TD_DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return TD_DOUBLE_HOLD;
-        else return TD_DOUBLE_TAP;
-    }
-    return TD_MORE_TAPS;
-}
-
-static td_tap_t tap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void dance_default_each(tap_dance_state_t *state, void *user_data, uint16_t kc_tap) {
-    if (state->count == 3) {
-        tap_code16(kc_tap);
-        tap_code16(kc_tap);
-        tap_code16(kc_tap);
-    }
-    if (state->count > 3) {
-        tap_code16(kc_tap);
-    }
-}
-
-void dance_default_finished(tap_dance_state_t *state, void *user_data, uint16_t kc_tap, uint16_t kc_hold) {
-    tap_state.state = cur_dance(state);
-    switch (tap_state.state) {
-        case TD_SINGLE_TAP: register_code16(kc_tap); break;
-        case TD_SINGLE_HOLD: register_code16(kc_hold); break;
-        case TD_DOUBLE_TAP: register_code16(kc_tap); register_code16(kc_tap); break;
-        case TD_DOUBLE_SINGLE_TAP: tap_code16(kc_tap); register_code16(kc_tap); break;
-        default: break;
-    }
-}
-
-void dance_default_reset(tap_dance_state_t *state, void *user_data, uint16_t kc_tap, uint16_t kc_hold) {
-    switch (tap_state.state) {
-        case TD_SINGLE_TAP: unregister_code16(kc_tap); break;
-        case TD_SINGLE_HOLD: unregister_code16(kc_hold); break;
-        case TD_DOUBLE_TAP: unregister_code16(kc_tap); break;
-        case TD_DOUBLE_SINGLE_TAP: unregister_code16(kc_tap); break;
-        default: break;
-    }
-    tap_state.state = TD_NONE;
-}
-
-void dance_bsls_each(tap_dance_state_t *state, void *user_data) {
-    dance_default_each(state, NULL, KC_BSLS);
-}
-void dance_bsls_finished(tap_dance_state_t *state, void *user_data) {
-    dance_default_finished(state, NULL, KC_BSLS, KC_HOME);
-}
-void dance_bsls_reset(tap_dance_state_t *state, void *user_data) {
-    dance_default_reset(state, NULL, KC_BSLS, KC_HOME);
-}
-
-void dance_pipe_each(tap_dance_state_t *state, void *user_data) {
-    dance_default_each(state, NULL, KC_PIPE);
-}
-void dance_pipe_finished(tap_dance_state_t *state, void *user_data) {
-    dance_default_finished(state, NULL, KC_PIPE, KC_END);
-}
-void dance_pipe_reset(tap_dance_state_t *state, void *user_data) {
-    dance_default_reset(state, NULL, KC_PIPE, KC_END);
+void u_td_fn_boot(tap_dance_state_t *state, void *user_data) {
+  if (state->count == 2) {
+    reset_keyboard();
+  }
 }
 
 tap_dance_action_t tap_dance_actions[] = {
-    [BSLS] = ACTION_TAP_DANCE_FN_ADVANCED(dance_bsls_each, dance_bsls_finished, dance_bsls_reset),
-    [PIPE] = ACTION_TAP_DANCE_FN_ADVANCED(dance_pipe_each, dance_pipe_finished, dance_pipe_reset)
+	[U_TD_BOOT] = ACTION_TAP_DANCE_FN(u_td_fn_boot)
 };
