@@ -282,35 +282,202 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 #ifdef OLED_ENABLE
 static void render_layer_state(void) {
-	if (layer_state_is(U_BASE)) {
+    static const char PROGMEM base_layer[] = {
+        0x20, 0x9d, 0x9e, 0x9f, 0x20,
+        0x20, 0xbd, 0x9c, 0xbf, 0x20,
+        0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+    static const char PROGMEM extra_layer[] = {
+        0x20, 0x9d, 0x9e, 0x9f, 0x20,
+        0x20, 0xbd, 0xdb, 0xbf, 0x20,
+        0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+    static const char PROGMEM tap_layer[] = {
+        0x20, 0x9d, 0x9e, 0x9f, 0x20,
+        0x20, 0xbd, 0xda, 0xbf, 0x20,
+        0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+    static const char PROGMEM game_layer[] = {
+        0x20, 0x9d, 0x9e, 0x9f, 0x20,
+        0x20, 0xbd, 0xdc, 0xbf, 0x20,
+        0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+    static const char PROGMEM num_layer[] = {
+        0x20, 0x9d, 0x9e, 0x9f, 0x20,
+        0x20, 0xbd, 0xbc, 0xbf, 0x20,
+        0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+    static const char PROGMEM sym_layer[] = {
+        0x20, 0x9d, 0x9e, 0x9f, 0x20,
+        0x20, 0xbd, 0xbb, 0xbf, 0x20,
+        0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+    static const char PROGMEM nav_layer[] = {
+        0x20, 0x9d, 0x9e, 0x9f, 0x20,
+        0x20, 0xbd, 0xbe, 0xbf, 0x20,
+        0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+	static const char PROGMEM mouse_layer[] = {
+		0x20, 0x9d, 0x9e, 0x9f, 0x20,
+		0x20, 0xbd, 0x9b, 0xbf, 0x20,
+		0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+	static const char PROGMEM fun_layer[] = {
+		0x20, 0x9d, 0x9e, 0x9f, 0x20,
+		0x20, 0xbd, 0x9a, 0xbf, 0x20,
+		0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+	static const char PROGMEM media_layer[] = {
+		0x20, 0x9d, 0x9e, 0x9f, 0x20,
+		0x20, 0xbd, 0xba, 0xbf, 0x20,
+		0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
+    if (layer_state_is(U_BASE)) {
 		if (base == U_BASE) {
-			oled_write_P(PSTR("Base\n"), false);
+			oled_write_P(base_layer, false);
 		} else if (base == U_EXTRA) {
-			oled_write_P(PSTR("Extra\n"), false);
+			oled_write_P(extra_layer, false);
 		} else if (base == U_TAP) {
-			oled_write_P(PSTR("Tap\n"), false);
+			oled_write_P(tap_layer, false);
 		} else if (base == U_GAME) {
-			oled_write_P(PSTR("Game\n"), false);
+			oled_write_P(game_layer, false);
 		}
-	} else if (layer_state_is(U_GAME)) {
-		oled_write_P(PSTR("Game\n"), false);
-	} else if (layer_state_is(U_NAV)) {
-		oled_write_P(PSTR("Nav\n"), false);
-	} else if (layer_state_is(U_MOUSE)) {
-		oled_write_P(PSTR("Mouse\n"), false);
-	} else if (layer_state_is(U_MEDIA)) {
-		oled_write_P(PSTR("Media\n"), false);
-	} else if (layer_state_is(U_NUM)) {
-		oled_write_P(PSTR("Num\n"), false);
-	} else if (layer_state_is(U_SYM)) {
-		oled_write_P(PSTR("Sym\n"), false);
-	} else if (layer_state_is(U_FUN)) {
-		oled_write_P(PSTR("Fun\n"), false);
-	} else {
-		oled_write_P(PSTR("None\n"), false);
-	}
+    } else if (layer_state_is(U_NUM)) {
+        oled_write_P(num_layer, false);
+    } else if (layer_state_is(U_SYM)) {
+        oled_write_P(sym_layer, false);
+    } else if (layer_state_is(U_NAV)) {
+        oled_write_P(nav_layer, false);
+    } else if (layer_state_is(U_MOUSE)) {
+        oled_write_P(mouse_layer, false);
+    } else if (layer_state_is(U_FUN)) {
+        oled_write_P(fun_layer, false);
+    } else if (layer_state_is(U_MEDIA)) {
+        oled_write_P(media_layer, false);
+    }
 }
 
+static void render_mod_status_gui_alt(uint8_t modifiers) {
+    static const char PROGMEM gui_off_1[] = {0x85, 0x86, 0};
+    static const char PROGMEM gui_off_2[] = {0xa5, 0xa6, 0};
+    static const char PROGMEM gui_on_1[] = {0x8d, 0x8e, 0};
+    static const char PROGMEM gui_on_2[] = {0xad, 0xae, 0};
+
+    static const char PROGMEM alt_off_1[] = {0x87, 0x88, 0};
+    static const char PROGMEM alt_off_2[] = {0xa7, 0xa8, 0};
+    static const char PROGMEM alt_on_1[] = {0x8f, 0x90, 0};
+    static const char PROGMEM alt_on_2[] = {0xaf, 0xb0, 0};
+
+    // fillers between the modifier icons bleed into the icon frames
+    static const char PROGMEM off_off_1[] = {0xc5, 0};
+    static const char PROGMEM off_off_2[] = {0xc6, 0};
+    static const char PROGMEM on_off_1[] = {0xc7, 0};
+    static const char PROGMEM on_off_2[] = {0xc8, 0};
+    static const char PROGMEM off_on_1[] = {0xc9, 0};
+    static const char PROGMEM off_on_2[] = {0xca, 0};
+    static const char PROGMEM on_on_1[] = {0xcb, 0};
+    static const char PROGMEM on_on_2[] = {0xcc, 0};
+
+    if(modifiers & MOD_MASK_GUI) {
+        oled_write_P(gui_on_1, false);
+    } else {
+        oled_write_P(gui_off_1, false);
+    }
+
+    if ((modifiers & MOD_MASK_GUI) && (modifiers & MOD_MASK_ALT)) {
+        oled_write_P(on_on_1, false);
+    } else if(modifiers & MOD_MASK_GUI) {
+        oled_write_P(on_off_1, false);
+    } else if(modifiers & MOD_MASK_ALT) {
+        oled_write_P(off_on_1, false);
+    } else {
+        oled_write_P(off_off_1, false);
+    }
+
+    if(modifiers & MOD_MASK_ALT) {
+        oled_write_P(alt_on_1, false);
+    } else {
+        oled_write_P(alt_off_1, false);
+    }
+
+    if(modifiers & MOD_MASK_GUI) {
+        oled_write_P(gui_on_2, false);
+    } else {
+        oled_write_P(gui_off_2, false);
+    }
+
+    if (modifiers & MOD_MASK_GUI & MOD_MASK_ALT) {
+        oled_write_P(on_on_2, false);
+    } else if(modifiers & MOD_MASK_GUI) {
+        oled_write_P(on_off_2, false);
+    } else if(modifiers & MOD_MASK_ALT) {
+        oled_write_P(off_on_2, false);
+    } else {
+        oled_write_P(off_off_2, false);
+    }
+
+    if(modifiers & MOD_MASK_ALT) {
+        oled_write_P(alt_on_2, false);
+    } else {
+        oled_write_P(alt_off_2, false);
+    }
+}
+
+static void render_mod_status_ctrl_shift(uint8_t modifiers) {
+    static const char PROGMEM ctrl_off_1[] = {0x89, 0x8a, 0};
+    static const char PROGMEM ctrl_off_2[] = {0xa9, 0xaa, 0};
+    static const char PROGMEM ctrl_on_1[] = {0x91, 0x92, 0};
+    static const char PROGMEM ctrl_on_2[] = {0xb1, 0xb2, 0};
+
+    static const char PROGMEM shift_off_1[] = {0x8b, 0x8c, 0};
+    static const char PROGMEM shift_off_2[] = {0xab, 0xac, 0};
+    static const char PROGMEM shift_on_1[] = {0xcd, 0xce, 0};
+    static const char PROGMEM shift_on_2[] = {0xcf, 0xd0, 0};
+
+    // fillers between the modifier icons bleed into the icon frames
+    static const char PROGMEM off_off_1[] = {0xc5, 0};
+    static const char PROGMEM off_off_2[] = {0xc6, 0};
+    static const char PROGMEM on_off_1[] = {0xc7, 0};
+    static const char PROGMEM on_off_2[] = {0xc8, 0};
+    static const char PROGMEM off_on_1[] = {0xc9, 0};
+    static const char PROGMEM off_on_2[] = {0xca, 0};
+    static const char PROGMEM on_on_1[] = {0xcb, 0};
+    static const char PROGMEM on_on_2[] = {0xcc, 0};
+
+    if(modifiers & MOD_MASK_CTRL) {
+        oled_write_P(ctrl_on_1, false);
+    } else {
+        oled_write_P(ctrl_off_1, false);
+    }
+
+    if ((modifiers & MOD_MASK_CTRL) && (modifiers & MOD_MASK_SHIFT)) {
+        oled_write_P(on_on_1, false);
+    } else if(modifiers & MOD_MASK_CTRL) {
+        oled_write_P(on_off_1, false);
+    } else if(modifiers & MOD_MASK_SHIFT) {
+        oled_write_P(off_on_1, false);
+    } else {
+        oled_write_P(off_off_1, false);
+    }
+
+    if(modifiers & MOD_MASK_SHIFT) {
+        oled_write_P(shift_on_1, false);
+    } else {
+        oled_write_P(shift_off_1, false);
+    }
+
+    if(modifiers & MOD_MASK_CTRL) {
+        oled_write_P(ctrl_on_2, false);
+    } else {
+        oled_write_P(ctrl_off_2, false);
+    }
+
+    if (modifiers & MOD_MASK_CTRL & MOD_MASK_SHIFT) {
+        oled_write_P(on_on_2, false);
+    } else if(modifiers & MOD_MASK_CTRL) {
+        oled_write_P(on_off_2, false);
+    } else if(modifiers & MOD_MASK_SHIFT) {
+        oled_write_P(off_on_2, false);
+    } else {
+        oled_write_P(off_off_2, false);
+    }
+
+    if(modifiers & MOD_MASK_SHIFT) {
+        oled_write_P(shift_on_2, false);
+    } else {
+        oled_write_P(shift_off_2, false);
+    }
+}
 static void render_aurora_art(void) {
 	// clang-format off
 	static const char PROGMEM aurora_art[] = {
@@ -355,6 +522,8 @@ static void render_aurora_art(void) {
 bool oled_task_user(void) {
 	if (is_keyboard_master()) {
 		render_layer_state();
+        render_mod_status_gui_alt(get_mods()|get_oneshot_mods());
+        render_mod_status_ctrl_shift(get_mods()|get_oneshot_mods());
 	} else {
 		render_aurora_art();
 	}
