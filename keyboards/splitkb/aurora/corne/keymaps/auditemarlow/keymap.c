@@ -157,7 +157,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *.-----------------------------------------------------,                          ,-----------------------------------------------------.
      *|        | Boot   | Tap    | Extra  | Base   |        |                          | Redo   | Paste  | Copy   | Cut    | Undo   |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
-     *|        | GUI    | Alt    | Ctrl   | Shift  |        |                          | Left   | Down   | Up     | Right  | CapsW  |        |
+     *|        | GUI    | Alt    | Ctrl   | Shift  |        |                          | Left   | Down   | Up     | Right  | CapsL  |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
      *|        |        |        |        |        |        |                          | Home   | PgDwn  | PgUp   | End    | Insert |        |
      *'-----------------------------------+--------+--------+--------,        ,--------+--------+--------+-----------------------------------'
@@ -166,7 +166,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [U_NAV] = LAYOUT_split_3x6_3(
         _______, QK_BOOT, L_TAP,   L_EXTRA, L_BASE,  _______,                            U_RDO,   U_PST,   U_CPY,   U_CUT,   U_UND,   _______,
-        _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, _______,
+        _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_CAPS, _______,
         _______, _______, _______, _______, _______, _______,                            KC_HOME, KC_PGDN, KC_PGUP, KC_END,  KC_INS,  _______,
                                             _______, _______, _______,          KC_ENT,  KC_BSPC, KC_DEL
     ),
